@@ -1,0 +1,31 @@
+ {% extends "myblog/base.html" %}
+{% block content %}
+
+
+<div class="container mx-auto px-4 bg-blue-100 py-4">
+
+    <div class="relative flex h-32 w-full justify-center rounded-xl bg-cover" >
+      <div class="absolute flex h-32 w-full justify-center rounded-xl bg-cover bg-gradient-to-r from-indigo-400 to-cyan-400"> </div> 
+                          
+      </div>
+<h5 class="text-2xl font-extrabold dark:text-white text-center py-8 ">  {% include "myblog/universal_form_heading.html" %} </h5>
+<div class="lg:container mx-auto flex w-100 flex-wrap items-center justify-center px-3 py-8 bg-blue-100">
+
+<form method="POST"  enctype="multipart/form-data">
+{% csrf_token %}
+{{form|safe}}
+{{form.media}}
+</br>
+  <button
+    type="submit"
+    class="inline-block rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-success-3 transition duration-150 ease-in-out hover:bg-success-accent-300 hover:shadow-success-2 focus:bg-success-accent-300 focus:shadow-success-2 focus:outline-none focus:ring-0 active:bg-success-600 active:shadow-success-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+    submit
+    </button>
+    <a href="javascript:history.go(-1)" class="inline-block rounded bg-blue-700 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-blue-3 transition duration-150 ease-in-out hover:bg-blue-accent-300 hover:shadow-blue-2 focus:bg-blue-accent-300 focus:shadow-blue-2 focus:outline-none focus:ring-0 active:bg-blue-600 active:shadow-blue-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+     Back
+    </a>
+</form>
+</div>
+</div>
+
+{% endblock content %}

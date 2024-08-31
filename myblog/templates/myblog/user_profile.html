@@ -1,0 +1,90 @@
+{% extends 'myblog/base.html'%}
+{% block content %}
+
+ <div class="flex flex-col justify-center items-center h-[100vh] ">
+            <div class="relative flex flex-col items-center rounded-[20px] w-[1200px] mx-auto p-4 bg-blue-100 bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none">
+                <div class="relative flex h-32 w-full justify-center rounded-xl bg-cover" >
+                    <div class="absolute flex h-32 w-full justify-center rounded-xl bg-cover bg-gradient-to-r from-indigo-400 to-cyan-400"> </div>
+                    <div class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-navy-700">
+                        <img class="h-full w-full rounded-full" src='{{user_profile.imageURL}}' alt="" />
+                    </div>
+                </div> 
+                <div class="mt-16 flex flex-col items-center">
+                    <h4 class="text-xl font-bold text-navy-700 dark:text-white py-4">
+                    {{user_profile.user.username}}
+                    </h4>
+                    <p class="text-base font-normal text-gray-600 mb-16">{{user_profile.bio}}</p>
+
+                </div> 
+                    <div class="mt-6 mb-3 flex gap-14 md:!gap-14">
+                    <div class="flex flex-col items-center justify-center">
+                     <a class="" href="{{user_profile.fb_link}}">
+                       <i class="fa-brands fa-facebook"></i>
+                    </a>
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <a class="pl-6" href="{{user_profile.linkedin_link}}">
+                            <i class="fa-brands fa-linkedin"></i>
+                        </a>
+                
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                         <a class="pl-6" href="{{user_profile.website}}">
+                            <i class="fa-solid fa-globe"></i>
+                        </a>
+                    </div>
+                </div>
+
+
+
+                <div class="mt-16 mb-3 flex gap-14 md:!gap-14">
+                    <div class="flex flex-col items-center justify-center">
+                    <p class="text-2xl font-bold text-navy-700 dark:text-white">{{user_profile.user.post_set.count}}</p>
+                    <p class="text-sm font-normal text-gray-600">Posts</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                    <p class="text-2xl font-bold text-navy-700 dark:text-white">
+                       {{user_profile.follows.count}}
+                    </p>
+                    <p class="text-sm font-normal text-gray-600">Followers</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                    <p class="text-2xl font-bold text-navy-700 dark:text-white">
+                        {{user_profile.followed_by.count}}
+                    </p>
+                    <p class="text-sm font-normal text-gray-600">Following</p>
+                    </div>
+                </div>
+            </div>  
+            <p class="font-normal text-navy-700 mt-20 mx-auto w-max">
+            <form method="POST" action={% url 'follow_user' user_profile.pk %}>
+            {% csrf_token %}
+            {% if not user_profile.pk == request.user.profile.pk %}
+                {% if  request.user.profile in user_profile.follows.all %}
+                <button
+                type="submit"
+                class="inline-block rounded bg-danger px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-danger-3 transition duration-150 ease-in-out hover:bg-danger-accent-300 hover:shadow-danger-2 focus:bg-danger-accent-300 focus:shadow-danger-2 focus:outline-none focus:ring-0 active:bg-danger-600 active:shadow-danger-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+                unfollow           
+                </button>
+                {% else %}
+                <button
+                type="submit"
+                class="inline-block rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-success-3 transition duration-150 ease-in-out hover:bg-success-accent-300 hover:shadow-success-2 focus:bg-success-accent-300 focus:shadow-success-2 focus:outline-none focus:ring-0 active:bg-success-600 active:shadow-success-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+                follow
+                </button>
+                {% endif  %}
+            {% endif %}
+            </form>
+            {% if  user_profile.pk == request.user.profile.pk %}
+            <a
+            href={% url 'edit_profile' request.user.profile.pk %}
+            class="inline-block rounded bg-danger px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-danger-3 transition duration-150 ease-in-out hover:bg-danger-accent-300 hover:shadow-danger-2 focus:bg-danger-accent-300 focus:shadow-danger-2 focus:outline-none focus:ring-0 active:bg-danger-600 active:shadow-danger-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+            Edit
+            </a>           
+            {% endif  %}
+
+            </p>  
+        </div>
+
+
+{% endblock content %}

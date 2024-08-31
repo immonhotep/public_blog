@@ -1,0 +1,64 @@
+    {% if comment.get_reply %}
+        {% for reply in comment.get_reply %}
+            <article class="p-6 mb-3 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
+                <footer class="flex justify-between items-center mb-2">
+                    <div class="flex items-center">
+                        <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"><img
+                                class="mr-2 w-6 h-6 rounded-full"
+                                src="{{reply.comment_user.profile.imageURL}}"
+                                alt="No avatar">{{reply.comment_user.username}}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-12"
+                                title="February 12th, 2022">{{reply.comment_date}}</time></p>
+                    </div>
+                </footer>
+                <p class="text-gray-500 dark:text-gray-400">{{reply.comment_text}}</p>
+                <div class="flex items-center mt-4 space-x-4">
+                            
+                <form method="POST"  action="{% url 'comment_like' reply.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="hover:text-blue-600 mr-2">
+                    
+                    {% if not  request.user in reply.like.all %}
+                    <i class="fa-solid fa-thumbs-up  fa-lg text-blue-500"></i>
+                        Like
+                    {% else %}
+                    <i class="fa-solid fa-thumbs-down fa-lg text-red-500"></i>
+                        dislike
+                    {% endif %}
+                    <small>({{reply.like.count}})</small>
+                    
+                    </button>
+                </form>
+
+                    {% if reply.comment_user == request.user %}
+                    
+                        <a
+                            href={% url 'edit_comment' reply.pk %}
+                            class="px-6 pb-2 pt-2.5 text-md font-medium text-green-700">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+
+                        <a
+                            href={% url 'delete_comment' reply.pk %}
+                            class="px-6 pb-2 pt-2.5 text-md font-medium text-green-700">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+
+                    {% endif  %}
+
+
+
+
+                </div>
+            </article>
+        {% endfor %}
+    {% endif %}
+
+
+
+
+
+
+
+
+

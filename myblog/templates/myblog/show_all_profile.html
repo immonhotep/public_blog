@@ -1,0 +1,81 @@
+ {% extends "myblog/base.html" %}
+{% block content %}
+
+
+<h1 class="text-center text-2xl py-3">Our Users</h1> 
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg py-10">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">             
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Followers
+                </th>
+                <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                    Follows
+                </th>
+                <th scope="col" class="px-6 py-3">
+                   Post
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in object_list %}
+            {% if user.profile %}
+            <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                    
+                    <div class="flex-shrink-0">
+                       <a href="{% url 'user_profile' user.profile.pk %}"> <img class="w-12 h-12 rounded-full" src="{{user.profile.imageURL}}" alt="No avatar"></a>
+                    </div>
+                    <div class=" ms-2">
+                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                            {{user.username}}
+                        </p>
+                    </div>
+
+                </th>
+                <td class="px-6 py-4">
+                    {{user.profile.follows.count}}
+                </td>
+                <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                    {{user.profile.followed_by.count}}
+                </td>
+                <td class="px-6 py-4">
+                    {{user.post_set.count}}
+                </td>
+            </tr>
+            {% endif %}
+            
+            {% endfor %}
+
+        </tbody>
+  
+    </table>
+
+</div>
+
+<div class="container mx-auto py-12 content-end text-end">
+    <a href="javascript:history.go(-1)" class="mb-10 inline-block rounded bg-blue-700 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-blue-3 transition duration-150 ease-in-out hover:bg-blue-accent-300 hover:shadow-blue-2 focus:bg-blue-accent-300 focus:shadow-blue-2 focus:outline-none focus:ring-0 active:bg-blue-600 active:shadow-blue-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+      Back
+    </a>
+
+<div>
+
+
+
+          {% if is_paginated %}
+                <div class="flex items-center py-8">
+                {% for page  in page_obj.paginator.page_range %}
+                    <a href="?page={{page}}" class="h-10 w-10 bg-blue-800 hover:bg-blue-600 font-semibold text-white text-sm flex items-center justify-center">{{page}}</a>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{page_obj.next_page_number}}" class="h-10 w-10 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3">Next <i class="fas fa-arrow-right ml-2"></i></a>
+                {% endif %}
+                </div>
+            {% endif %} 
+
+{% endblock content %}

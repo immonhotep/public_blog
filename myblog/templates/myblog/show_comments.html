@@ -1,0 +1,120 @@
+{% extends "myblog/base.html" %}
+{% block content %}
+
+
+<div  class="bg-white dark:bg-gray-900 py-8 lg:py-16 antialiased" id="div-with-bg">
+  <div class="max-w-2xl mx-auto px-4">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Comments ({{comments_number}})</h2>
+    </div>
+    
+    <form method="POST" class="mb-6">
+        {% csrf_token %}
+        
+        <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+            <label for="comment" class="sr-only">Your comment</label>
+            {% if not form %}
+            <textarea name="comment" rows="6"
+                class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                placeholder="{% if request.user.is_authenticated %}Write a comment...{% else %} You need login {% endif %}" required {% if not request.user.is_authenticated%} disabled {% endif %}></textarea>
+            {% else %}
+              {{form}}
+            {% endif  %}
+        </div>
+        
+        <button type="submit"
+            class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+            {% if not request.user.is_authenticated%} disabled {% endif %}
+            >
+            Post comment
+        </button>
+        <a href="javascript:history.go(-1)" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+          Back
+        </a>
+    </form>
+
+    {% for comment in comments %}
+    {% if not comment.reply %}
+    <div class="space-y-4">
+      <div class="bg-white p-4 ">
+       <div class="font-extrabold text-sm italic"></div>
+       <h5></h5>
+        <div class="flex items-center mb-2">
+          
+          <img src="{{comment.comment_user.profile.imageURL}}" alt="User Avatar" class="w-10 h-10 rounded-full mr-3">
+          <div>
+            <h3 class="font-semibold">{{comment.comment_user.username}}</h3>
+            <p class="text-sm text-gray-500"><a id="{{comment.id}}">{{comment.comment_date}}</a></p>
+          </div>
+        </div>
+        <p class="text-gray-700">{{comment.comment_text}}</p>
+        <div class="flex items-center mt-2">
+        <form method="POST"  action="{% url 'comment_like' comment.pk %}">
+         {% csrf_token %}
+          <button type="submit" class="hover:text-blue-600 mr-2">
+           
+          {% if not  request.user in comment.like.all %}
+          <i class="fa-solid fa-thumbs-up  fa-lg text-blue-500"></i>
+            Like
+          {% else %}
+          <i class="fa-solid fa-thumbs-down fa-lg text-red-500"></i>
+            dislike
+          {% endif %}
+          <small>({{comment.like.count}})</small>
+           
+          </button>
+          </form>
+         {% if not comment.comment_user == request.user %}
+         <button
+          type="button"
+          class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium"
+          data-twe-toggle="modal"
+          data-twe-target="#exampleModal-{{comment.pk}}"
+          data-twe-ripple-init
+          data-twe-ripple-color="light">
+          <i class="fa-solid fa-reply"></i>
+          reply ({{comment.get_reply.count}})
+        </button>
+        
+        {% endif  %}
+          {% if comment.comment_user == request.user %}
+      
+          <a
+            href={% url 'edit_comment' comment.pk %}
+            class="px-6 pb-2 pt-2.5 text-md font-medium text-green-700">
+            <i class="fa-solid fa-pen"></i>
+          </a>
+
+          <a
+            href={% url 'delete_comment' comment.pk %}
+            class="px-6 pb-2 pt-2.5 text-md font-medium text-green-700">
+            <i class="fa-solid fa-trash"></i>
+          </a>
+
+        {% endif  %}
+        </div>
+        
+      </div>
+    {% include "myblog/modal.html" %}
+    {% endif %}
+    
+    {% include 'myblog/comment_reply.html'%}
+    {% endfor %}
+    
+      {% if comments.has_other_pages %}
+                <div class="flex items-center py-8">
+                {% for page  in comments.paginator.page_range %}
+                    <a href="?page={{page}}" class="h-10 w-10 bg-blue-800 hover:bg-blue-600 font-semibold text-white text-sm flex items-center justify-center">{{page}}</a>
+                {% endfor %}
+
+                {% if comments.has_next %}
+                    <a href="?page={{posts.next_page_number}}" class="h-10 w-10 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3">Next <i class="fas fa-arrow-right ml-2"></i></a>
+                </div>
+                {% endif %}
+                
+      {% endif %} 
+  </div>
+</div>
+
+
+{% endblock content %}

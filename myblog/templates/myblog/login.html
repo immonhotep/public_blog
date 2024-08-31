@@ -1,0 +1,44 @@
+{% extends 'myblog/base.html' %}
+
+{% block content%}
+
+<div class="font-sans text-gray-900 antialiased">
+            <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-[#f8f4f3]">
+
+                <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+                    <form method="POST">
+                    {% csrf_token %}
+
+                        <div class="py-8">
+                            <center>
+                                <span class="text-2xl font-semibold">Log In</span>
+                            </center>
+                        </div>
+
+                        {% for field in  form%}     
+                        <div class="mt-4">
+                        
+                            <div class="relative">
+                              {{field}}
+                            </div>
+                        </div>
+                        {% endfor%}
+
+                        <div class="flex items-center justify-end mt-4">
+                                <a class="hover:underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-6" href="{% url 'password_reset' %}">
+                                    Forgot your password?
+                                </a>
+
+                                <button
+                                type="submit"
+                                class="inline-block rounded bg-primary px-4 pb-[5px] pt-[6px] text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+                                Login
+                                </button>
+
+                        </div>
+                        
+                    </form>                
+                </div>
+            </div>
+        </div>
+{% endblock content%}

@@ -1,0 +1,152 @@
+
+        <aside class="w-full md:w-1/3 flex flex-col items-center px-3">
+
+            <div class="w-full bg-white shadow flex flex-col my-4 p-6 bg-gray-100">
+                <p class="text-xl font-semibold pb-5">My posts</p>
+                {% if request.user.is_authenticated %}
+                    {% if Myposts %}
+                        {% for  post in Myposts %}
+                            <p class="pb-2">{{post.title|truncatechars:30}}<a>
+                            <a  href="{% url 'update_post' post.pk %}" class="bg-green-800 text-white active:bg-green-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                            <i class="fa-solid fa-pen-nib fa-sm"></i> 
+                            </a>
+                            <a  href="{% url 'delete_post' post.pk %}" class="bg-danger-800 text-white active:bg-danger-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                            <i class="fa-solid fa-eraser fa-sm"></i> 
+                            </a>
+                            
+                            
+                            </a></p>
+                        {% endfor %}
+                        {% if Myposts.has_other_pages %}
+                        <nav aria-label="Page navigation example" class="py-8">
+                        <ul class="list-style-none flex">
+                        {% if Myposts.has_previous %}
+                            <li>
+                                <a
+                                class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-surface transition duration-300 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-primary-700 focus:outline-none focus:ring-0 active:bg-neutral-100 active:text-primary-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:focus:text-primary-500 dark:active:bg-neutral-700 dark:active:text-primary-500"
+                                href="?page2={{ Myposts.previous_page_number }}">
+                                Previous
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for num in Myposts.paginator.page_range %}
+                                {% if Myposts.number == num %}
+                                    <li>
+                                    <a
+                                        class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-surface transition duration-300 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-primary-700 focus:outline-none active:bg-neutral-100 active:text-primary-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:focus:text-primary-500 dark:active:bg-neutral-700 dark:active:text-primary-500"
+                                        href="">{{ num }}</a>
+                                    </li>
+                                {% else %}
+
+                                <li>
+                                <a
+                                    class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-surface transition duration-300 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-primary-700 focus:outline-none active:bg-neutral-100 active:text-primary-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:focus:text-primary-500 dark:active:bg-neutral-700 dark:active:text-primary-500"
+                                    href="?page2={{ num }}">{{ num }}</a>
+                                </li>
+                                
+                                {% endif %}
+                            {% endfor %}
+                        {% if Myposts.has_next %}
+                            <li>
+                            <a
+                                class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-surface transition duration-300 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-primary-700 focus:outline-none active:bg-neutral-100 active:text-primary-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:focus:text-primary-500 dark:active:bg-neutral-700 dark:active:text-primary-500"
+                                href="?page2={{ Myposts.next_page_number }}"
+                                >Next</a>
+                            </li>
+                            {% else %}
+
+                            <li>
+                            <a
+                                class="disabled relative block rounded bg-transparent px-3 py-1.5 text-sm text-surface transition duration-300 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-primary-700 focus:outline-none active:bg-neutral-100 active:text-primary-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:focus:text-primary-500 dark:active:bg-neutral-700 dark:active:text-primary-500"
+                                href=""
+                                ></a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        </nav>
+                        {% endif %}     
+
+
+
+
+                    {% else %}
+                    You have no posts
+                    {% endif %}
+                {% else %}
+                Need login to posts
+                {% endif %}  
+
+
+                   
+                <a href="{% url 'create_post' %}" class="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-4">
+                    Create new post
+                </a>
+                
+               
+            </div>
+
+            <div class="w-full bg-white shadow flex flex-col my-4 p-6 bg-gray-100">
+                <p class="text-xl font-semibold pb-5 text-center">Our users</p>
+                <div class="mt-4">
+                <h4 class="text-sm text-gray-600">{{Profiles.count}} Users</h4>
+                <div class="flex items-center overflow-hidden mt-2">
+                  
+                     <div class="flex -space-x-2 overflow-hidden">
+                        {% for profile in  Profiles|slice:10 %}
+                            <a href="{% url 'user_profile' profile.pk %}"><img class="inline-block h-12 w-12 rounded-full ring-2 ring-white" src="{{profile.imageURL}}" alt=""></a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                </div>
+
+
+                <a href="{% url 'all_profiles' %}" class="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-6">
+                     See more
+                </a>
+            </div>
+
+            {% if request.user.is_authenticated %}
+            <div class="w-full bg-white shadow flex flex-col my-4 p-6 bg-emerald-100">
+                <p class="text-xl font-semibold pb-5 text-center">My followers</p>
+                <div class="mt-4">
+                <h4 class="text-sm text-gray-600">{{request.user.profile.follows.count}} Followers</h4>
+                <div class="flex items-center overflow-hidden mt-2">
+    
+                    <div class="flex -space-x-2 overflow-hidden">
+                        {% for follower in request.user.profile.follows.all|slice:10 %}
+                            <a href="{% url 'user_profile' follower.pk %}"><img class="inline-block h-12 w-12 rounded-full ring-2 ring-white" src="{{follower.imageURL}}" alt=""></a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+             <a href="{% url 'list_followers' %}" class="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-6">
+                     See more
+                </a>
+            </div>
+
+          
+                     
+            <div class="w-full bg-white shadow flex flex-col my-4 p-6 bg-blue-100">
+                <p class="text-xl font-semibold pb-5 text-center">Users followed by me</p>
+                <div class="mt-4">
+                <h4 class="text-sm text-gray-600">{{request.user.profile.followed_by.count}} follows</h4>
+                <div class="flex items-center overflow-hidden mt-2">
+                 
+                    <div class="flex -space-x-2 overflow-hidden">
+                         {% for follower in request.user.profile.followed_by.all|slice:10 %}
+                            <a href="{% url 'user_profile' follower.pk %}"><img class="inline-block h-12 w-12 rounded-full ring-2 ring-white" src="{{follower.imageURL}}" alt=""></a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                 <a href="{% url 'list_follows' %}" class="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-6">
+                     See more
+                </a>
+            </div>
+            {% endif %}
+
+
+        </aside>
